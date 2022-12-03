@@ -4,20 +4,20 @@ services:
   - docker
 
 before_install:
-  - docker build -t araton1/react-test -f ./client/Dockerfile.dev ./client
+  - docker build -t epamaliaksandryazerski/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true araton1/react-test npm test
+  - docker run -e CI=true epamaliaksandryazerski/react-test npm test
 
 after_success:
-  - docker build -t araton1/multi-client ./client
-  - docker build -t araton1/multi-nginx ./nginx
-  - docker build -t araton1/multi-server ./server
-  - docker build -t araton1/multi-worker ./worker
+  - docker build -t epamaliaksandryazerski/multi-client ./client
+  - docker build -t epamaliaksandryazerski/multi-nginx ./nginx
+  - docker build -t epamaliaksandryazerski/multi-server ./server
+  - docker build -t epamaliaksandryazerski/multi-worker ./worker
   # Log in to the docker CLI
   - echo "$PASSWORD" | docker login -u "$ID" --password-stdin
   # Push images to docker hub
-  - docker push araton1/multi-client
-  - docker push araton1/multi-nginx
-  - docker push araton1/multi-server
-  - docker push araton1/multi-worker
+  - docker push epamaliaksandryazerski/multi-client
+  - docker push epamaliaksandryazerski/multi-nginx
+  - docker push epamaliaksandryazerski/multi-server
+  - docker push epamaliaksandryazerski/multi-worker
