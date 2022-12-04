@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Multi docker app to beanstalk
 on:
   push:
     branches:
