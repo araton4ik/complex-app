@@ -1,0 +1,29 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DOCKERHUB_PASS: "dockerhub:password"
+    DOCKERHUB_USERNAME: "dockerhub:username"
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to DOCKER_HUB
+      - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USERNAME --password-stdin
+      - echo Start running test on `date`
+      - docker build -t $DOCKERHUB_USERNAME/react-test -f ./client/Dockerfile.dev ./client
+      - docker run -e CI=true $DOCKERHUB_USERNAME/react-test npm test
+  build:
+    commands:
+      - echo Building the Docker images...
+      - docker build -t $DOCKERHUB_USERNAME/multi-client ./client
+      - docker build -t $DOCKERHUB_USERNAME/multi-nginx ./nginx
+      - docker build -t $DOCKERHUB_USERNAME/multi-server ./server
+      - docker build -t $DOCKERHUB_USERNAME/multi-worker ./worker
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing images to the Docker Hub
+      - docker push $DOCKERHUB_USERNAME/multi-client
+      - docker push $DOCKERHUB_USERNAME/multi-nginx
+      - docker push $DOCKERHUB_USERNAME/multi-server
+      - docker push $DOCKERHUB_USERNAME/multi-worker
